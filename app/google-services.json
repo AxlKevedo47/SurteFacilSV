@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "798699832189",
+    "project_id": "surtefacilsvdbnube",
+    "storage_bucket": "surtefacilsvdbnube.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798699832189:android:d069a124f8248503850214",
+        "android_client_info": {
+          "package_name": "com.example.surtefacilsv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXa07Q-TDpHVdism1KDt6XOXMlcPnPwIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

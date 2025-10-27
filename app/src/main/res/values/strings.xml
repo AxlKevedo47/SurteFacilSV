@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SurteFacilSV</string>
+    <string name="app_logo">Logo aplicación</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarme</string>
+    <string name="forgot_password">Olvidé mi contraseña</string>
+    <string name="remember_me">Recordar mis datos</string>
+    <string name="full_name">Nombre completo</string>
+    <string name="create_account">Crear Cuenta</string>
+    <string name="have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="welcome_message">¡Bienvenido, %s!</string>
+</resources>

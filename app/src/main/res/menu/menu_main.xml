@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Perfil Visible siempre -->
+    <item
+        android:id="@+id/action_profile"
+        android:title="Perfil"
+        android:icon="@drawable/ic_profile"
+        app:showAsAction="always" />
+
+    <!-- Tema visible siempre -->
+    <item
+        android:id="@+id/action_theme"
+        android:title="Cambiar tema"
+        android:icon="@drawable/ic_night"
+        app:showAsAction="always" />
+
+    <!-- Sincroniza el Menu -->
+    <item
+        android:id="@+id/action_sync"
+        android:title="Sincronizar"
+        android:icon="@drawable/ic_sync"
+        app:showAsAction="never" />
+
+    <!-- Cerrar sesión en menu -->
+    <item
+        android:id="@+id/action_logout"
+        android:title="Cerrar Sesión"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="never" />
+
+</menu>
