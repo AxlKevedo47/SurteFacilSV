@@ -16,6 +16,10 @@
         android:icon="@drawable/ic_night"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_map"
+        android:title="Mapa"
+        app:showAsAction="never" />
     <!-- Sincroniza el Menu -->
     <item
         android:id="@+id/action_sync"

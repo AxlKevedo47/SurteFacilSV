@@ -9,6 +9,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import android.widget.LinearLayout
+import android.widget.Toast
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -24,7 +27,6 @@ class HomeActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // Establecer título en el Toolbar
         supportActionBar?.title = "SurteFacilSV"
 
         initViews()
@@ -57,15 +59,20 @@ class HomeActivity : AppCompatActivity() {
         val cardProviders: LinearLayout = findViewById(R.id.cardProviders)
         cardProviders.setOnClickListener {
             Toast.makeText(this, "Navegando a Gestión de Proveedores", Toast.LENGTH_SHORT).show()
-            // CRUD futuro a agregar
         }
 
         val cardOrders: LinearLayout = findViewById(R.id.cardOrders)
         cardOrders.setOnClickListener {
             Toast.makeText(this, "Navegando a Gestión de Pedidos", Toast.LENGTH_SHORT).show()
-            // CRUD futuro a agregar
+        }
+
+        val cardProducts: LinearLayout = findViewById(R.id.cardProducts)
+        cardProducts.setOnClickListener {
+            Toast.makeText(this, "Navegando a Productos", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ProductListActivity::class.java))
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -91,11 +98,16 @@ class HomeActivity : AppCompatActivity() {
                 showLogoutConfirmation()
                 true
             }
+            R.id.action_map -> { // NUEVO
+                val intent = Intent(this, MapActivity::class.java)
+                startActivity(intent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    // MÉTODO PARA CAMBIAR TEMA
+
     private fun toggleTheme() {
         val currentTheme = sharedPreferences.getString("app_theme", "light")
         val newTheme = if (currentTheme == "light") "dark" else "light"
@@ -117,7 +129,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun syncData() {
         Toast.makeText(this, "Sincronizando datos...", Toast.LENGTH_SHORT).show()
-        // Sincronizacion con FirebaseSyncHelper
     }
 
     private fun showLogoutConfirmation() {
@@ -132,14 +143,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        // Limpia el  SharedPreferences
         val editor = sharedPreferences.edit()
         editor.remove("user_email")
         editor.remove("user_name")
         editor.remove("remember_me")
         editor.apply()
 
-        // Redirige al Login
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="?attr/colorOnPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:navigationIconTint="@color/white" />
+
+    <!-- Label Productos -->
+    <TextView
+        android:id="@+id/tvProductsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="16dp"
+        android:textColor="#FFFFFF" />
+
+    <!-- RecyclerView de Productos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProducts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvProductsLabel"
+        android:layout_marginTop="12dp"
+         android:layout_above="@id/btnAddProduct"
+         android:padding="12dp" />
+
+    <!-- Botón Agregar Producto -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:contentDescription="Agregar"
+        android:src="@drawable/ic_add"
+        app:tint="#FFFFFF"
+        android:backgroundTint="#2E7D32" />
+
+</RelativeLayout>

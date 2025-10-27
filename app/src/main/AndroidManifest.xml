@@ -3,46 +3,60 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/iconsfsv"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.SurteFacilSV">
 
-        <!-- Esto se ocupa en el Home Activity -->
+        <!-- Home Activity -->
         <activity
             android:name=".HomeActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
 
-        <!-- Esto se ocupa en el Profile Activity -->
+        <!-- Profile Activity -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
 
-        <!-- Esto se ocupa en el edit profile -->
+        <!-- Edit Profile Activity -->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
 
         <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Product List Activity -->
+        <activity
+            android:name=".ProductListActivity"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
         <!-- Register Activity -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDcXchIFRo4NVfq-mdiEiH4cVmJ8d4hjWw"/>
+
+        <activity android:name=".MapActivity"
+            android:theme="@style/AppThemeMap.NoActionBar" />
 
     </application>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 </manifest>
