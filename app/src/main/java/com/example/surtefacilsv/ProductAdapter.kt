@@ -42,8 +42,17 @@ class ProductAdapter(
             .placeholder(R.drawable.ic_image_placeholder)
             .into(holder.imgProduct)
 
-        holder.btnEdit.setOnClickListener { onEditClick(product) }
-        holder.btnDelete.setOnClickListener { onDeleteClick(product) }
+        // BOTON EDITAR - Agregar logs
+        holder.btnEdit.setOnClickListener {
+            println("DEBUG: Editando producto: ${product.name}")
+            onEditClick(product)
+        }
+
+        // BOTON ELIMINAR - Agregar logs
+        holder.btnDelete.setOnClickListener {
+            println("DEBUG: Eliminando producto: ${product.name}")
+            onDeleteClick(product)
+        }
     }
 
     fun updateList(newList: MutableList<Product>) {

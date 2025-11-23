@@ -17,34 +17,61 @@
         android:textColor="#2E7D32"
         android:layout_gravity="center" />
 
+    <!-- NOMBRE -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto:"
+        android:textColor="#212121"
+        android:layout_marginTop="10dp" />
     <EditText
         android:id="@+id/etProductName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="Nombre del producto" />
+        android:layout_marginTop="5dp"
+        android:hint="Ej: Arroz, Frijoles, etc."
+        android:background="@drawable/edittext_background"
+        android:padding="12dp" />
 
+    <!-- PRECIO -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Precio:"
+        android:textColor="#212121"
+        android:layout_marginTop="10dp" />
     <EditText
         android:id="@+id/etProductPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:inputType="numberDecimal"
-        android:hint="Precio" />
+        android:hint="Ej: 5.99, 10.50, etc."
+        android:background="@drawable/edittext_background"
+        android:padding="12dp" />
 
+    <!-- URL IMAGEN -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="URL de la imagen:"
+        android:textColor="#212121"
+        android:layout_marginTop="10dp" />
     <EditText
         android:id="@+id/etProductImageUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="URL de la imagen" />
+        android:layout_marginTop="5dp"
+        android:hint="https://ejemplo.com/imagen.jpg"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp" />
 
     <Button
         android:id="@+id/btnSaveProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Guardar"
+        android:text="Guardar Producto"
         android:textColor="#FFFFFF"
         android:background="#2E7D32" />
 

@@ -27,7 +27,7 @@ class ProductListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_product_list)
 
         val recycler = findViewById<RecyclerView>(R.id.rvProducts)
-        val btnAdd = findViewById<FloatingActionButton>(R.id.btnAddProduct)
+        val btnAdd = findViewById<FloatingActionButton>(R.id.btnAddProduct) // FLOATING ACTION BUTTON
 
         adapter = ProductAdapter(
             productList,
@@ -38,7 +38,16 @@ class ProductListActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
-        btnAdd.setOnClickListener { openDialog(null) }
+        // AGREGAR TRY-CATCH AL LISTENER
+        try {
+            btnAdd.setOnClickListener {
+                println("DEBUG: FAB clickeado - Abriendo diálogo")
+                openDialog(null)
+            }
+        } catch (e: Exception) {
+            println("ERROR: No se pudo configurar el FAB: ${e.message}")
+            Toast.makeText(this, "Error al configurar botón agregar", Toast.LENGTH_SHORT).show()
+        }
 
         loadProducts()
 
@@ -67,7 +76,7 @@ class ProductListActivity : AppCompatActivity() {
                         id = doc.id,
                         name = doc.getString("name") ?: "",
                         price = doc.getDouble("price") ?: 0.0,
-                        imageUrl = doc.getString("imageUrl") ?: ""
+                        imageUrl = doc.getString("imageUrl") ?: "",
                     )
                     productList.add(product)
                 }
@@ -75,72 +84,86 @@ class ProductListActivity : AppCompatActivity() {
             }
     }
 
+    // ✅ AGREGAR TRY-CATCH AL OPEN DIALOG
     private fun openDialog(productToEdit: Product?) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_edit_product, null)
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
+        try {
+            println("DEBUG: Iniciando openDialog")
+            val dialogView = layoutInflater.inflate(R.layout.dialog_add_edit_product, null)
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
 
-        val title = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
-        val etName = dialogView.findViewById<EditText>(R.id.etProductName)
-        val etPrice = dialogView.findViewById<EditText>(R.id.etProductPrice)
-        val etImageUrl = dialogView.findViewById<EditText>(R.id.etProductImageUrl)
-        val btnSave = dialogView.findViewById<Button>(R.id.btnSaveProduct)
+            val title = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+            val etName = dialogView.findViewById<EditText>(R.id.etProductName)
+            val etPrice = dialogView.findViewById<EditText>(R.id.etProductPrice)
+            val etImageUrl = dialogView.findViewById<EditText>(R.id.etProductImageUrl)
+            val btnSave = dialogView.findViewById<Button>(R.id.btnSaveProduct)
 
-        if (productToEdit != null) {
-            title.text = "Editar Producto"
-            etName.setText(productToEdit.name)
-            etPrice.setText(productToEdit.price.toString())
-            etImageUrl.setText(productToEdit.imageUrl)
-        }
-
-        btnSave.setOnClickListener {
-            val name = etName.text.toString().trim()
-            val price = etPrice.text.toString().toDoubleOrNull()
-            val url = etImageUrl.text.toString().trim()
-
-            if (name.isBlank() || price == null || url.isBlank()) {
-                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (productToEdit == null) {
-
-                val newProduct = hashMapOf(
-                    "name" to name,
-                    "price" to price,
-                    "imageUrl" to url
-                )
-                db.collection("products")
-                    .add(newProduct)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Producto agregado", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error al agregar: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+            if (productToEdit != null) {
+                title.text = "Editar Producto"
+                etName.setText(productToEdit.name)
+                etPrice.setText(productToEdit.price.toString())
+                etImageUrl.setText(productToEdit.imageUrl)
             } else {
-
-                val updates = hashMapOf<String, Any>(
-                    "name" to name,
-                    "price" to price,
-                    "imageUrl" to url
-                )
-                db.collection("products")
-                    .document(productToEdit.id)
-                    .update(updates)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Producto actualizado", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error al actualizar: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                title.text = "Agregar Producto"
             }
 
-            dialog.dismiss()
-        }
+            btnSave.setOnClickListener {
+                try {
+                    val name = etName.text.toString().trim()
+                    val price = etPrice.text.toString().toDoubleOrNull()
+                    val url = etImageUrl.text.toString().trim()
 
-        dialog.show()
+                    if (name.isBlank() || price == null || url.isBlank()) {
+                        Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    println("DEBUG: Guardando producto - $name, $price, $url")
+
+                    if (productToEdit == null) {
+                        val newProduct = hashMapOf(
+                            "name" to name,
+                            "price" to price,
+                            "imageUrl" to url
+                        )
+                        db.collection("products")
+                            .add(newProduct)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Producto agregado", Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Error al agregar: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        val updates = hashMapOf<String, Any>(
+                            "name" to name,
+                            "price" to price,
+                            "imageUrl" to url
+                        )
+                        db.collection("products")
+                            .document(productToEdit.id)
+                            .update(updates)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Producto actualizado", Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Error al actualizar: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                } catch (e: Exception) {
+                    println("ERROR en btnSave: ${e.message}")
+                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.show()
+            println("DEBUG: Diálogo mostrado exitosamente")
+        } catch (e: Exception) {
+            println("ERROR en openDialog: ${e.message}")
+            Toast.makeText(this, "Error al abrir diálogo: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun deleteProduct(product: Product) {

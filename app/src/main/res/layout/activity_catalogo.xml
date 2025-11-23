@@ -14,6 +14,16 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Catálogo de Productos" />
 
+    <!-- Botón para gestionar productos -->
+    <Button
+        android:id="@+id/btnGestionarProductos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gestionar Productos"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_margin="16dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCatalogo"
         android:layout_width="match_parent"

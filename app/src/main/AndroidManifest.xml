@@ -62,7 +62,7 @@
             android:parentActivityName=".DashboardClienteActivity"
             android:theme="@style/Theme.SurteFacilSV" />
 
-        <!-- Catalogo Activity - NUEVA -->
+        <!-- Catalogo Activity - COREJIDO -->
         <activity
             android:name=".CatalogoActivity"
             android:label="Catálogo de Productos"
