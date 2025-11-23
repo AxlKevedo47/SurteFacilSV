@@ -48,6 +48,34 @@
             android:name=".RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Dashboard Cliente Activity -->
+        <activity
+            android:name=".DashboardClienteActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Pedidos Activity -->
+        <activity
+            android:name=".PedidosActivity"
+            android:label="Mis Pedidos"
+            android:parentActivityName=".DashboardClienteActivity"
+            android:theme="@style/Theme.SurteFacilSV" />
+
+        <!-- Catalogo Activity - NUEVA -->
+        <activity
+            android:name=".CatalogoActivity"
+            android:label="Catálogo de Productos"
+            android:parentActivityName=".DashboardClienteActivity"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Carrito Activity - NUEVA -->
+        <activity
+            android:name=".CarritoActivity"
+            android:label="Carrito de Compras"
+            android:parentActivityName=".DashboardClienteActivity"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDcXchIFRo4NVfq-mdiEiH4cVmJ8d4hjWw"/>

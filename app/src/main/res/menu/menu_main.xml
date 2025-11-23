@@ -16,11 +16,13 @@
         android:icon="@drawable/ic_night"
         app:showAsAction="always" />
 
+    <!-- Mapa en el menú de 3 puntos -->
     <item
         android:id="@+id/action_map"
         android:title="Mapa"
         app:showAsAction="never" />
-    <!-- Sincroniza el Menu -->
+
+    <!-- Sincronizar en el menú -->
     <item
         android:id="@+id/action_sync"
         android:title="Sincronizar"

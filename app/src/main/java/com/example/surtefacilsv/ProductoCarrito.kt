@@ -1,4 +1,6 @@
 package com.example.surtefacilsv
 
-class ProductoCarrito {
-}
+data class ProductoCarrito(
+    val producto: Product,
+    var cantidad: Int
+)

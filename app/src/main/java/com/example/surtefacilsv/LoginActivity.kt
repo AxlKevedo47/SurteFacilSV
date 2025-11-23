@@ -151,8 +151,8 @@ class LoginActivity : AppCompatActivity() {
                         apply()
                     }
 
-                    // Navegar al Home
-                    val intent = Intent(this, HomeActivity::class.java)
+                    // Navegar al Dashboard del Cliente
+                    val intent = Intent(this, DashboardClienteActivity::class.java)
                     startActivity(intent)
                     finish()
 
@@ -160,7 +160,7 @@ class LoginActivity : AppCompatActivity() {
 
                 } catch (e: Exception) {
                     Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    Log.e("LOGIN_ERROR", "Error al navegar al Home", e)
+                    Log.e("LOGIN_ERROR", "Error al navegar al Dashboard", e)
                 }
             } else {
                 Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
