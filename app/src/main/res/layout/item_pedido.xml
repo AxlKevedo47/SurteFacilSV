@@ -4,43 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textViewPedidoId"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Pedido #12345" />
-
-        <TextView
-            android:id="@+id/textViewPedidoTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPedidoId"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Total: $55.00" />
-
+        <!-- Fecha del pedido -->
         <TextView
             android:id="@+id/textViewPedidoFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPedidoId"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="20 Jun 2025" />
+
+        <!-- Badge de estado -->
+        <TextView
+            android:id="@+id/textViewEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/pendiente"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textViewPedidoTotal"
-            tools:text="18/05/2024" />
+            tools:text="Pendiente" />
+
+        <!-- ID del pedido -->
+        <TextView
+            android:id="@+id/textViewPedidoId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="#999999"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPedidoFecha"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Pedido #SV2025-500" />
+
+        <!-- Cantidad de productos -->
+        <TextView
+            android:id="@+id/textViewCantidadProductos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPedidoId"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="2 Productos" />
+
+        <!-- Total del pedido -->
+        <TextView
+            android:id="@+id/textViewPedidoTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@+id/textViewCantidadProductos"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Total: $31.00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -7,9 +7,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Date
-import java.util.UUID
-import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Intent
 
 class CarritoActivity : AppCompatActivity() {
@@ -17,18 +14,22 @@ class CarritoActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var carritoAdapter: CarritoAdapter
     private lateinit var textViewTotal: TextView
-    private lateinit var firestore: FirebaseFirestore
+    private lateinit var btnRealizarPedido: Button
+    private lateinit var btnVerPedidos: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_carrito)
 
+        // Habilitar botón de regreso en ActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Carrito de Compras"
+
+        // Inicializar vistas
         recyclerView = findViewById(R.id.recyclerViewCarrito)
         textViewTotal = findViewById(R.id.textViewTotal)
-        val btnRealizarPedido = findViewById<Button>(R.id.btnRealizarPedido)
-        val btnVerPedidos = findViewById<Button>(R.id.btnVerPedidos) // NUEVO
-
-        firestore = FirebaseFirestore.getInstance()
+        btnRealizarPedido = findViewById(R.id.btnRealizarPedido)
+        btnVerPedidos = findViewById(R.id.btnVerPedidos)
 
         setupRecyclerView()
         updateTotal()
@@ -37,7 +38,7 @@ class CarritoActivity : AppCompatActivity() {
             realizarPedido()
         }
 
-        // NUEVO: Botón para ver pedidos anteriores
+        // Botón para ver pedidos anteriores
         btnVerPedidos.setOnClickListener {
             val intent = Intent(this, PedidosActivity::class.java)
             startActivity(intent)
@@ -49,14 +50,32 @@ class CarritoActivity : AppCompatActivity() {
             Carrito.removerProducto(productoCarrito)
             carritoAdapter.notifyDataSetChanged()
             updateTotal()
+
+            if (Carrito.productos.isEmpty()) {
+                Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show()
+            }
         }
         recyclerView.adapter = carritoAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Observar cambios en el adapter para actualizar el total
+        carritoAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                updateTotal()
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                updateTotal()
+            }
+        })
     }
 
     private fun updateTotal() {
         val total = Carrito.getTotal()
-        textViewTotal.text = String.format("Total: $%.2f", total)
+        textViewTotal.text = String.format("$%.2f", total)
+
+        // Deshabilitar botón si el carrito está vacío
+        btnRealizarPedido.isEnabled = Carrito.productos.isNotEmpty()
     }
 
     private fun realizarPedido() {
@@ -68,28 +87,16 @@ class CarritoActivity : AppCompatActivity() {
         println("🛒 DEBUG: Productos en carrito: ${Carrito.productos.size}")
         println("🛒 DEBUG: Total del carrito: ${Carrito.getTotal()}")
 
-        val nuevoPedido = Pedido(
-            id = UUID.randomUUID().toString(),
-            productos = ArrayList(Carrito.productos),
-            total = Carrito.getTotal(),
-            fecha = Date()
-        )
+        // Navegar a la pantalla de confirmación de pedido
+        val intent = Intent(this, ConfirmacionPedidoActivity::class.java)
+        startActivity(intent)
+    }
 
-        println("🛒 DEBUG: Pedido creado: ${nuevoPedido.id}")
-
-        // GUARDA EN FIREBASE
-        firestore.collection("pedidos")
-            .add(nuevoPedido)
-            .addOnSuccessListener { documentReference ->
-                println("✅ DEBUG: Pedido guardado en Firebase con ID: ${documentReference.id}")
-                Toast.makeText(this, "Pedido realizado con éxito", Toast.LENGTH_LONG).show()
-                Carrito.limpiarCarrito()
-                finish()
-            }
-            .addOnFailureListener { e ->
-                println("❌ DEBUG: Error al guardar pedido: ${e.message}")
-                Toast.makeText(this, "Error al realizar pedido: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+    override fun onResume() {
+        super.onResume()
+        // Actualizar la lista cuando se regresa a esta actividad
+        carritoAdapter.notifyDataSetChanged()
+        updateTotal()
     }
 
     // Agregar soporte para el botón de retroceso en la ActionBar

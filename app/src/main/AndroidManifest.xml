@@ -83,6 +83,11 @@
         <activity android:name=".MapActivity"
             android:theme="@style/AppThemeMap.NoActionBar" />
 
+        <activity
+            android:name=".ConfirmacionPedidoActivity"
+            android:exported="false"
+            android:parentActivityName=".CarritoActivity" />
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

@@ -26,12 +26,44 @@ class PedidosAdapter(private val pedidos: List<Pedido>) : RecyclerView.Adapter<P
         private val textViewPedidoId: TextView = itemView.findViewById(R.id.textViewPedidoId)
         private val textViewPedidoTotal: TextView = itemView.findViewById(R.id.textViewPedidoTotal)
         private val textViewPedidoFecha: TextView = itemView.findViewById(R.id.textViewPedidoFecha)
+        private val textViewEstado: TextView = itemView.findViewById(R.id.textViewEstado)
+        private val textViewCantidadProductos: TextView = itemView.findViewById(R.id.textViewCantidadProductos)
 
         fun bind(pedido: Pedido) {
-            textViewPedidoId.text = "Pedido #${pedido.id.take(6)}..."
+            // ID del pedido
+            textViewPedidoId.text = "Pedido #${pedido.id.take(8)}"
+
+            // Total
             textViewPedidoTotal.text = String.format("Total: $%.2f", pedido.total)
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+            // Fecha
+            val sdf = SimpleDateFormat("dd MMM yyyy", Locale("es", "ES"))
             textViewPedidoFecha.text = sdf.format(pedido.fecha)
+
+            // Cantidad de productos
+            val cantidadTotal = pedido.productos.sumOf { it.cantidad }
+            textViewCantidadProductos.text = if (cantidadTotal == 1) {
+                "1 Producto"
+            } else {
+                "$cantidadTotal Productos"
+            }
+
+            // Estado con background según el tipo
+            textViewEstado.text = pedido.estado
+            when (pedido.estado.lowercase()) {
+                "pendiente" -> {
+                    textViewEstado.setBackgroundResource(R.drawable.pendiente)
+                }
+                "completado", "entregado" -> {
+                    textViewEstado.setBackgroundResource(R.drawable.completado)
+                }
+                "cancelado" -> {
+                    textViewEstado.setBackgroundResource(R.drawable.cancelado)
+                }
+                else -> {
+                    textViewEstado.setBackgroundResource(R.drawable.pendiente)
+                }
+            }
         }
     }
 }

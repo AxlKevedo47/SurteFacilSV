@@ -1,59 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="4dp">
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp">
 
+        <!-- Imagen del producto -->
+        <ImageView
+            android:id="@+id/imgProduct"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_placeholder"
+            android:background="#F0F0F0" />
+
+        <!-- Nombre del producto -->
         <TextView
             android:id="@+id/textViewProductName"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textViewProductPrice"
-            tools:text="Nombre del Producto" />
+            android:layout_toEndOf="@id/imgProduct"
+            android:layout_marginStart="16dp"
+            android:layout_alignTop="@id/imgProduct"
+            android:text="Nombre del Producto"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface" />
 
+        <!-- Precio unitario -->
+        <TextView
+            android:id="@+id/textViewPrecioUnitario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewProductName"
+            android:layout_toEndOf="@id/imgProduct"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="$0.00"
+            android:textSize="14sp"
+            android:textColor="#666666" />
+
+        <!-- Precio total del item -->
         <TextView
             android:id="@+id/textViewProductPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textViewProductName"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewProductName"
-            tools:text="$10.99" />
+            android:layout_below="@id/textViewPrecioUnitario"
+            android:layout_toEndOf="@id/imgProduct"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="Total: $0.00"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary" />
 
-        <TextView
-            android:id="@+id/textViewQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewProductName"
-            tools:text="Cantidad: 2" />
-
-        <ImageButton
+        <!-- Botón eliminar -->
+        <ImageView
             android:id="@+id/buttonRemoveFromCart"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignTop="@id/imgProduct"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Eliminar"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="#B6342C" />
+
+        <!-- Contenedor de controles de cantidad -->
+        <LinearLayout
+            android:id="@+id/layoutCantidad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_delete"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewProductPrice"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_below="@id/imgProduct"
+            android:layout_toEndOf="@id/imgProduct"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Botón menos -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnMenos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabCustomSize="36dp"
+                app:fabSize="mini"
+                android:src="@drawable/ic_minus"
+                app:tint="@android:color/white"
+                app:backgroundTint="#FF9800" />
+
+            <!-- Cantidad -->
+            <TextView
+                android:id="@+id/textViewQuantity"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:gravity="center" />
+
+            <!-- Botón más -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnMas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabCustomSize="36dp"
+                app:fabSize="mini"
+                android:src="@drawable/ic_plus"
+                app:tint="@android:color/white"
+                app:backgroundTint="#4CAF50" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </com.google.android.material.card.MaterialCardView>
