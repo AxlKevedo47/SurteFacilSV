@@ -6,30 +6,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context=".HomeActivity">
+    tools:context=".OrderHistoryActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarOrderHistory"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="Catálogo de Productos"
+        app:title="Mis Pedidos"
         app:titleTextColor="@color/white" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchViewHome"
+    <RadioGroup
+        android:id="@+id/rgOrderStatusFilterHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/edittext_background"
-        app:queryHint="Buscar productos..." />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <RadioButton
+            android:id="@+id/rbPendingHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pendientes"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/rbDeliveredHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entregados"
+            android:layout_marginStart="16dp"/>
+
+    </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProductsHome"
+        android:id="@+id/rvOrderHistory"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="8dp"
-        tools:listitem="@layout/item_product_buyer" />
+        tools:listitem="@layout/item_order_history" />
 
 </LinearLayout>

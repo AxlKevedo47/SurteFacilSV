@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Carrito de Compras -->
+    <item
+        android:id="@+id/action_cart"
+        android:title="Carrito"
+        android:icon="@drawable/ic_shopping_cart"
+        app:showAsAction="ifRoom" />
+
     <!-- Perfil Visible siempre -->
     <item
         android:id="@+id/action_profile"

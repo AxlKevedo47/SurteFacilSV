@@ -12,7 +12,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,10 +28,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tvForgotPassword: TextView
     private lateinit var btnThemeToggle: ImageButton
 
-    private lateinit var databaseHelper: DatabaseHelper
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var firebaseAuth: FirebaseAuth
+    private val firestore = FirebaseFirestore.getInstance()
 
-    // Constantes para los temas
     companion object {
         private const val PREF_THEME = "app_theme"
         private const val THEME_LIGHT = "light"
@@ -35,14 +39,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Aplicar el tema guardado ANTES de crear la vista
         applySavedTheme()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        databaseHelper = DatabaseHelper(this)
-        sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        firebaseAuth = FirebaseAuth.getInstance()
 
         initViews()
         loadSavedUser()
@@ -73,21 +75,107 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        btnLogin.setOnClickListener {
-            attemptLogin()
+        btnLogin.setOnClickListener { attemptLogin() }
+        tvRegister.setOnClickListener { startActivity(Intent(this, RegisterActivity::class.java)) }
+        tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
+        btnThemeToggle.setOnClickListener { toggleTheme() }
+    }
+
+    private fun attemptLogin() {
+        val email = etEmail.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+
+        if (validateInputs(email, password)) {
+            btnLogin.isEnabled = false
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val user = task.result?.user
+                        if (user != null) {
+                            fetchUserAndNavigate(user)
+                        } else {
+                            Toast.makeText(this, "Error: No se pudo obtener el usuario.", Toast.LENGTH_SHORT).show()
+                            btnLogin.isEnabled = true
+                        }
+                    } else {
+                        Log.w("LoginActivity", "signInWithEmail:failure", task.exception)
+                        Toast.makeText(baseContext, "Fallo de autenticación. Verifique sus credenciales.", Toast.LENGTH_SHORT).show()
+                        btnLogin.isEnabled = true
+                    }
+                }
+        }
+    }
+
+    private fun fetchUserAndNavigate(firebaseUser: FirebaseUser) {
+        firestore.collection("users").document(firebaseUser.uid).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val userType = document.getString("user_type")
+                    val userName = document.getString("full_name") ?: "Usuario"
+                    val businessName = document.getString("business_name") ?: "Negocio"
+                    val email = firebaseUser.email ?: ""
+
+                    if (cbRemember.isChecked) {
+                        saveUserCredentials(email, etPassword.text.toString().trim())
+                    }
+
+                    val editor = sharedPreferences.edit()
+                    editor.putString("user_uid", firebaseUser.uid) 
+                    editor.putString("user_email", email)
+
+                    if (userType == "Soy un Vendedor") {
+                        editor.putString("user_name", businessName).apply()
+                        val intent = Intent(this, SellerDashboardActivity::class.java)
+                        intent.putExtra("business_name", businessName)
+                        startActivity(intent)
+                    } else {
+                        editor.putString("user_name", userName).apply()
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    }
+                    finish()
+                } else {
+                    Toast.makeText(this, "Error: No se encontraron datos para este usuario.", Toast.LENGTH_SHORT).show()
+                    btnLogin.isEnabled = true
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("LoginActivity", "Error getting user details", exception)
+                Toast.makeText(this, "Error al obtener datos del usuario.", Toast.LENGTH_SHORT).show()
+                btnLogin.isEnabled = true
+            }
+    }
+    
+    private fun showForgotPasswordDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Restablecer Contraseña")
+        val view = layoutInflater.inflate(R.layout.dialog_forgot_password, null)
+        val etEmailDialog = view.findViewById<EditText>(R.id.etEmailDialog)
+        builder.setView(view)
+        builder.setPositiveButton("Enviar") { _, _ ->
+            val email = etEmailDialog.text.toString().trim()
+            sendPasswordResetEmail(email)
+        }
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.create().show()
+    }
+
+    private fun sendPasswordResetEmail(email: String) {
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Por favor, ingrese un correo válido", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        tvRegister.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-        }
-
-        tvForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Funcionalidad en desarrollo", Toast.LENGTH_SHORT).show()
-        }
-
-        btnThemeToggle.setOnClickListener {
-            toggleTheme()
-        }
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Correo de restablecimiento enviado. Revisa tu bandeja de spam.", Toast.LENGTH_LONG).show()
+                } else {
+                    Log.e("FORGOT_PASSWORD", "Error al enviar correo de restablecimiento", task.exception)
+                    Toast.makeText(this, "No se pudo enviar el correo. Verifica que el correo esté registrado.", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     private fun toggleTheme() {
@@ -95,19 +183,9 @@ class LoginActivity : AppCompatActivity() {
         val newTheme = if (currentTheme == THEME_LIGHT) THEME_DARK else THEME_LIGHT
 
         sharedPreferences.edit().putString(PREF_THEME, newTheme).apply()
-
         applyTheme(newTheme)
-        updateThemeIcon()
-
-        Toast.makeText(this, "Tema: ${if (newTheme == THEME_DARK) "Oscuro" else "Claro"}", Toast.LENGTH_SHORT).show()
+        recreate()
     }
-
-     private fun applySavedTheme() {
-        val savedTheme = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            .getString(PREF_THEME, THEME_LIGHT) ?: THEME_LIGHT
-        applyTheme(savedTheme)
-    }
-
 
     private fun applyTheme(theme: String) {
         when (theme) {
@@ -116,69 +194,31 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // Actualizar icono del botón
+    private fun applySavedTheme() {
+        val savedTheme = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString(PREF_THEME, THEME_LIGHT) ?: THEME_LIGHT
+        applyTheme(savedTheme)
+    }
+
     private fun updateThemeIcon() {
-        val currentTheme = sharedPreferences.getString(PREF_THEME, THEME_LIGHT)
-        val iconRes = if (currentTheme == THEME_DARK) {
-            R.drawable.ic_day  // Mostrar sol si está en modo oscuro
-        } else {
-            R.drawable.ic_night // Mostrar luna si está en modo claro
-        }
+        val currentTheme = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString(PREF_THEME, THEME_LIGHT)
+        val iconRes = if (currentTheme == THEME_DARK) R.drawable.ic_day else R.drawable.ic_night
         btnThemeToggle.setImageResource(iconRes)
     }
 
-    private fun attemptLogin() {
-        val email = etEmail.text.toString().trim()
-        val password = etPassword.text.toString().trim()
-
-        if (validateInputs(email, password)) {
-            if (databaseHelper.checkUser(email, password)) {
-                try {
-                    if (cbRemember.isChecked) {
-                        saveUserCredentials(email, password)
-                    } else {
-                        clearUserCredentials()
-                    }
-
-                    // Intentar obtener el nombre del usuario
-                    val userName = databaseHelper.getUserByEmail(email) ?: "Usuario"
-
-                    // Guardar datos para el Home
-                    val prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-                    prefs.edit().apply {
-                        putString("user_email", email)
-                        putString("user_name", userName)
-                        apply()
-                    }
-
-                    // Navegar al Home
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-
-                    Toast.makeText(this, "Login exitoso!", Toast.LENGTH_SHORT).show()
-
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    Log.e("LOGIN_ERROR", "Error al navegar al Home", e)
-                }
-            } else {
-                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     private fun saveUserCredentials(email: String, password: String) {
-        sharedPreferences.edit().apply {
-            putString("saved_email", email)
-            putString("saved_password", password)
-            putBoolean("remember_user", true)
-            apply()
-        }
+        val editor = sharedPreferences.edit()
+        editor.putString("saved_email", email)
+        editor.putString("saved_password", password)
+        editor.putBoolean("remember_user", true)
+        editor.apply()
     }
 
     private fun clearUserCredentials() {
-        sharedPreferences.edit().remove("saved_email").remove("saved_password").remove("remember_user").apply()
+        val editor = sharedPreferences.edit()
+        editor.remove("saved_email")
+        editor.remove("saved_password")
+        editor.remove("remember_user")
+        editor.apply()
     }
 
     private fun validateInputs(email: String, password: String): Boolean {

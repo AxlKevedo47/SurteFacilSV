@@ -48,6 +48,67 @@
             android:name=".RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Seller Register Activity -->
+        <activity
+            android:name=".SellerRegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Buyer Register Activity -->
+        <activity
+            android:name=".BuyerRegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Seller Dashboard Activity -->
+        <activity
+            android:name=".SellerDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Seller Product List Activity -->
+        <activity
+            android:name=".SellerProductListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Add/Edit Product Activity -->
+        <activity
+            android:name=".AddEditProductActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Seller Orders Activity -->
+        <activity
+            android:name=".SellerOrdersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Order Details Activity -->
+        <activity
+            android:name=".OrderDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+        
+        <!-- Cart Activity -->
+        <activity
+            android:name=".CartActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+            
+        <!-- Confirm Order Activity -->
+        <activity
+            android:name=".ConfirmOrderActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
+        <!-- Order History Activity -->
+        <activity
+            android:name=".OrderHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SurteFacilSV.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDcXchIFRo4NVfq-mdiEiH4cVmJ8d4hjWw"/>
@@ -59,4 +120,5 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

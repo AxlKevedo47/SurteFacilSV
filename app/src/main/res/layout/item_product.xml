@@ -70,7 +70,7 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="Eliminar"
-                    android:src="@drawable/ic_delete"
+                    android:src="@drawable/ic_trash_can"
                     app:tint="#B6342C" /> <!-- Color fijo: rojo -->
 
         </RelativeLayout>

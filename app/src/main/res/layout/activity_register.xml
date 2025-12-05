@@ -1,135 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:gravity="center_vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="32dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_night"
+            android:contentDescription="Cambiar tema" />
+    </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/btnThemeToggle"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_night"
-                android:contentDescription="Cambiar tema" />
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/app_logo" />
 
-        </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:text="Selecciona tu tipo de cuenta"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-        <!-- Logo -->
+    <Button
+        android:id="@+id/btnSeller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Soy vendedor"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"/>
 
-        <!-- Título -->
+    <Button
+        android:id="@+id/btnBuyer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Soy comprador"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"/>
 
-        <!-- Full Name -->
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            android:contentDescription="@string/app_logo"
-            android:scaleType="fitCenter"
-            android:src="@drawable/logo" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:gravity="center"
-            android:text="@string/create_account"
-            android:textColor="@color/text_primary"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etFullName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/full_name"
-            android:inputType="textPersonName"
-            android:background="@drawable/edittext_background"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary" />
-
-        <!-- Email -->
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/edittext_background"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary" />
-
-        <!-- Password -->
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:background="@drawable/edittext_background"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary" />
-
-        <TextView
-            android:id="@+id/tvUserTypeLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tipo de usuario"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerUserType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Register Button -->
-        <Button
-            android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:background="@color/colorPrimary"
-            android:text="@string/register"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:textSize="16sp" />
-
-        <!-- Login Link -->
-        <TextView
-            android:id="@+id/tvLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/have_account"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

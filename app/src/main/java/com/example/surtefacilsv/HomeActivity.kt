@@ -4,20 +4,30 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.*
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.cardview.widget.CardView
-import android.widget.LinearLayout
-import android.widget.Toast
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.surtefacilsv.adapters.BuyerProductAdapter
+import com.example.surtefacilsv.managers.CartManager
+import com.example.surtefacilsv.models.Product
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var tvWelcome: TextView
-    private lateinit var tvUserEmail: TextView
-    private lateinit var tvStats: TextView
+    private lateinit var rvProducts: RecyclerView
+    private lateinit var searchView: SearchView
+    private lateinit var productAdapter: BuyerProductAdapter
+    private var allProducts = mutableListOf<Product>()
+    private var displayedProducts = mutableListOf<Product>()
+
+    private val firestore = FirebaseFirestore.getInstance()
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,53 +36,79 @@ class HomeActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        supportActionBar?.title = "Catálogo"
 
-        supportActionBar?.title = "SurteFacilSV"
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
         initViews()
-        loadUserData()
-        setupClickListeners()
+        setupRecyclerView()
+        setupListeners()
+        loadProducts()
     }
 
     private fun initViews() {
-        tvWelcome = findViewById(R.id.tvWelcome)
-        tvUserEmail = findViewById(R.id.tvUserEmail)
-        tvStats = findViewById(R.id.tvStats)
-        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        rvProducts = findViewById(R.id.rvProductsHome)
+        searchView = findViewById(R.id.searchViewHome)
     }
 
-    private fun loadUserData() {
-        val userEmail = sharedPreferences.getString("user_email", "")
-        val userName = sharedPreferences.getString("user_name", "Usuario")
-
-        tvWelcome.text = getString(R.string.welcome_message, userName)
-        tvUserEmail.text = userEmail
-
-        loadInitialStats()
-    }
-
-    private fun loadInitialStats() {
-        tvStats.text = "• Proveedores registrados: 0\n• Pedidos activos: 0\n• Sincronización: Al día"
-    }
-
-    private fun setupClickListeners() {
-        val cardProviders: LinearLayout = findViewById(R.id.cardProviders)
-        cardProviders.setOnClickListener {
-            Toast.makeText(this, "Navegando a Gestión de Proveedores", Toast.LENGTH_SHORT).show()
+    private fun setupRecyclerView() {
+        productAdapter = BuyerProductAdapter(displayedProducts) { product ->
+            val success = CartManager.addProduct(product)
+            if (success) {
+                Toast.makeText(this, "${product.name} agregado al carrito", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "No hay más stock para este producto.", Toast.LENGTH_SHORT).show()
+            }
         }
-
-        val cardOrders: LinearLayout = findViewById(R.id.cardOrders)
-        cardOrders.setOnClickListener {
-            Toast.makeText(this, "Navegando a Gestión de Pedidos", Toast.LENGTH_SHORT).show()
-        }
-
-        val cardProducts: LinearLayout = findViewById(R.id.cardProducts)
-        cardProducts.setOnClickListener {
-            Toast.makeText(this, "Navegando a Productos", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, ProductListActivity::class.java))
-        }
+        rvProducts.layoutManager = LinearLayoutManager(this)
+        rvProducts.adapter = productAdapter
     }
 
+    private fun setupListeners() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterProducts(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterProducts(newText)
+                return true
+            }
+        })
+    }
+
+    private fun loadProducts() {
+        firestore.collection("products")
+            .orderBy("name", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w("HomeActivity", "Listen failed.", e)
+                    Toast.makeText(this, "Error al cargar productos.", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
+                }
+
+                allProducts.clear()
+                for (doc in snapshots!!) {
+                    val product = doc.toObject(Product::class.java)
+                    allProducts.add(product)
+                }
+                filterProducts(searchView.query.toString())
+            }
+    }
+
+    private fun filterProducts(query: String?) {
+        displayedProducts.clear()
+        if (query.isNullOrBlank()) {
+            displayedProducts.addAll(allProducts)
+        } else {
+            val filtered = allProducts.filter {
+                it.name.contains(query, ignoreCase = true) 
+            }
+            displayedProducts.addAll(filtered)
+        }
+        productAdapter.updateList(displayedProducts)
+    }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -82,31 +118,24 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
-                val intent = Intent(this, ProfileActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, ProfileActivity::class.java))
+                true
+            }
+            R.id.action_cart -> {
+                startActivity(Intent(this, CartActivity::class.java))
                 true
             }
             R.id.action_theme -> {
                 toggleTheme()
                 true
             }
-            R.id.action_sync -> {
-                syncData()
-                true
-            }
             R.id.action_logout -> {
                 showLogoutConfirmation()
-                true
-            }
-            R.id.action_map -> { // NUEVO
-                val intent = Intent(this, MapActivity::class.java)
-                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun toggleTheme() {
         val currentTheme = sharedPreferences.getString("app_theme", "light")
@@ -114,9 +143,6 @@ class HomeActivity : AppCompatActivity() {
 
         sharedPreferences.edit().putString("app_theme", newTheme).apply()
         applyTheme(newTheme)
-
-        Toast.makeText(this, "Tema: ${if (newTheme == "dark") "Oscuro" else "Claro"}", Toast.LENGTH_SHORT).show()
-
         recreate()
     }
 
@@ -127,26 +153,19 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun syncData() {
-        Toast.makeText(this, "Sincronizando datos...", Toast.LENGTH_SHORT).show()
-    }
-
     private fun showLogoutConfirmation() {
         AlertDialog.Builder(this)
             .setTitle("Cerrar Sesión")
             .setMessage("¿Estás seguro de que quieres cerrar sesión?")
-            .setPositiveButton("Sí") { dialog: android.content.DialogInterface, which: Int ->
-                logout()
-            }
+            .setPositiveButton("Sí") { _, _ -> logout() }
             .setNegativeButton("No", null)
             .show()
     }
 
     private fun logout() {
+        FirebaseAuth.getInstance().signOut()
         val editor = sharedPreferences.edit()
-        editor.remove("user_email")
-        editor.remove("user_name")
-        editor.remove("remember_me")
+        editor.clear()
         editor.apply()
 
         val intent = Intent(this, LoginActivity::class.java)
