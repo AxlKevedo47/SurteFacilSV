@@ -26,28 +26,31 @@
         </RelativeLayout>
 
         <!-- Logo -->
+
+        <!-- Título -->
+
+        <!-- Full Name -->
+
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
-            android:src="@drawable/logo"
+            android:contentDescription="@string/app_logo"
             android:scaleType="fitCenter"
-            android:contentDescription="@string/app_logo" />
+            android:src="@drawable/logo" />
 
-        <!-- Título -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
             android:text="@string/create_account"
             android:textColor="@color/text_primary"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="32dp" />
+            android:textStyle="bold" />
 
-        <!-- Full Name -->
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
@@ -85,6 +88,23 @@
             android:layout_marginBottom="16dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/tvUserTypeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de usuario"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerUserType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"/>
 
         <!-- Register Button -->
         <Button

@@ -9,7 +9,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "SurteFacilSV.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2 // Incrementar la versión de la base de datos
 
         // Tabla de lo Usuarios
         private const val TABLE_USERS = "users"
@@ -17,6 +17,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_FULL_NAME = "full_name"
         private const val COLUMN_EMAIL = "email"
         private const val COLUMN_PASSWORD = "password"
+        private const val COLUMN_USER_TYPE = "user_type"
         private const val COLUMN_CREATED_AT = "created_at"
     }
 
@@ -27,6 +28,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COLUMN_FULL_NAME TEXT NOT NULL,
                 $COLUMN_EMAIL TEXT UNIQUE NOT NULL,
                 $COLUMN_PASSWORD TEXT NOT NULL,
+                $COLUMN_USER_TYPE TEXT NOT NULL, 
                 $COLUMN_CREATED_AT DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         """.trimIndent()
@@ -35,17 +37,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
-        onCreate(db)
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_USER_TYPE TEXT NOT NULL DEFAULT 'Soy un comprador'")
+        }
     }
 
     // Con esto se esta Agregando los Usaurios
-    fun addUser(fullName: String, email: String, password: String): Boolean {
+    fun addUser(fullName: String, email: String, password: String, userType: String): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_FULL_NAME, fullName)
             put(COLUMN_EMAIL, email)
             put(COLUMN_PASSWORD, password) // En producción, esto debería estar encriptado
+            put(COLUMN_USER_TYPE, userType)
         }
 
         val result = db.insert(TABLE_USERS, null, values)

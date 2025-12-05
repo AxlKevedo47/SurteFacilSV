@@ -5,39 +5,39 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var etFullName: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
+    private lateinit var spinnerUserType: Spinner
     private lateinit var btnRegister: Button
     private lateinit var tvLogin: TextView
     private lateinit var btnThemeToggle: ImageButton
 
-    private lateinit var databaseHelper: DatabaseHelper
+    private lateinit var userRepository: UserRepository
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        applySavedTheme() // Aplicar tema antes de crear la vista
+        applySavedTheme()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        databaseHelper = DatabaseHelper(this)
+        userRepository = UserRepository(this)
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
-        firestore = FirebaseFirestore.getInstance() // Inicializa el Firestore
-
         initViews()
+        setupSpinner()
         updateThemeIcon()
         setupListeners()
     }
@@ -46,9 +46,17 @@ class RegisterActivity : AppCompatActivity() {
         etFullName = findViewById(R.id.etFullName)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
+        spinnerUserType = findViewById(R.id.spinnerUserType)
         btnRegister = findViewById(R.id.btnRegister)
         tvLogin = findViewById(R.id.tvLogin)
         btnThemeToggle = findViewById(R.id.btnThemeToggle)
+    }
+
+    private fun setupSpinner() {
+        val userTypes = arrayOf("Soy un comprador", "Soy un Vendedor")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, userTypes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerUserType.adapter = adapter
     }
 
     private fun setupListeners() {
@@ -92,28 +100,12 @@ class RegisterActivity : AppCompatActivity() {
         val fullName = etFullName.text.toString().trim()
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
+        val userType = spinnerUserType.selectedItem.toString()
 
         if (validateInputs(fullName, email, password)) {
-            val success = databaseHelper.addUser(fullName, email, password)
+            val success = userRepository.registerUser(fullName, email, password, userType)
 
             if (success) {
-                //  Guardar también en Firestore
-                val userData = hashMapOf(
-                    "full_name" to fullName,
-                    "email" to email,
-                    "password" to password,
-                    "created_at" to System.currentTimeMillis()
-                )
-
-                firestore.collection("users")
-                    .add(userData)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Usuario guardado en Firestore", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "Error al guardar en Firestore", Toast.LENGTH_SHORT).show()
-                    }
-
                 Toast.makeText(this, "Registro exitoso!", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()

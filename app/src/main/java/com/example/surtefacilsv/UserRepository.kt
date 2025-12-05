@@ -9,16 +9,17 @@ class UserRepository(context: Context) {
     private val localDb = DatabaseHelper(context)
     private val firestore = FirebaseFirestore.getInstance()
 
-    fun registerUser(fullName: String, email: String, password: String): Boolean {
+    fun registerUser(fullName: String, email: String, password: String, userType: String): Boolean {
         // Guardar local
-        val savedLocal = localDb.addUser(fullName, email, password)
+        val savedLocal = localDb.addUser(fullName, email, password, userType)
 
         // Si se guardó, Lo va a subir a Firestore
         if (savedLocal) {
             val userData = hashMapOf(
                 "full_name" to fullName,
                 "email" to email,
-                "password" to password,
+                "password" to password, // Considera encriptar la contraseña
+                "user_type" to userType,
                 "created_at" to System.currentTimeMillis()
             )
 
