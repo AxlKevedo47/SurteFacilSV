@@ -13,14 +13,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Título principal -->
         <TextView
             style="@style/TextAppearance.Material3.HeadlineSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Confirmar Pedido"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
 
+        <!-- Sección resumen -->
         <TextView
             style="@style/TextAppearance.Material3.TitleLarge"
             android:layout_width="wrap_content"
@@ -32,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:listitem="@layout/item_order_product_detail"/>
+            tools:listitem="@layout/item_order_product_detail" />
 
         <TextView
             android:id="@+id/tvTotalOrderSummary"
@@ -41,14 +43,15 @@
             android:layout_height="wrap_content"
             android:text="Total: $0.00"
             android:layout_gravity="end"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/text_secondary"
-            android:layout_marginVertical="16dp"/>
+            android:layout_marginVertical="16dp" />
 
+        <!-- Dirección -->
         <TextView
             style="@style/TextAppearance.Material3.TitleLarge"
             android:layout_width="wrap_content"
@@ -64,14 +67,15 @@
             android:minLines="2"
             android:background="@drawable/edittext_background"
             android:padding="16dp"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/text_secondary"
-            android:layout_marginVertical="16dp"/>
+            android:layout_marginVertical="16dp" />
 
+        <!-- Pago -->
         <TextView
             style="@style/TextAppearance.Material3.TitleLarge"
             android:layout_width="wrap_content"
@@ -84,61 +88,33 @@
             android:layout_height="wrap_content"
             android:text="Contra entrega"
             android:checked="true"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/text_secondary"
-            android:layout_marginVertical="16dp"/>
+            android:layout_marginVertical="16dp" />
 
+        <!-- Card: info del negocio -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp"
+            android:layout_marginTop="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
 
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Enviado desde"/>
-
-                <TextView
-                    android:id="@+id/tvBusinessName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_products"
-                    android:drawablePadding="8dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    tools:text="Nombre del Negocio"/>
-
-                <TextView
-                    android:id="@+id/tvBusinessAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_my_location"
-                    android:drawablePadding="8dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="4dp"
-                    tools:text="Dirección de texto del negocio"/>
-
-            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Botón enviar -->
         <Button
             android:id="@+id/btnSendOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enviar Pedido"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/colorPrimary" />
 
     </LinearLayout>
 </ScrollView>

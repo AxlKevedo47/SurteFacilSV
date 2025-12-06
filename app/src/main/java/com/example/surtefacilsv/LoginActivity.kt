@@ -33,17 +33,20 @@ class LoginActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
 
     companion object {
+        private const val PREFS_NAME = "app_prefs"
         private const val PREF_THEME = "app_theme"
         private const val THEME_LIGHT = "light"
         private const val THEME_DARK = "dark"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        applySavedTheme()
+
+        applySavedTheme()  // SIEMPRE ANTES DEL super
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         firebaseAuth = FirebaseAuth.getInstance()
 
         initViews()
@@ -120,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     val editor = sharedPreferences.edit()
-                    editor.putString("user_uid", firebaseUser.uid) 
+                    editor.putString("user_uid", firebaseUser.uid)
                     editor.putString("user_email", email)
 
                     if (userType == "Soy un Vendedor") {
@@ -144,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
                 btnLogin.isEnabled = true
             }
     }
-    
+
     private fun showForgotPasswordDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Restablecer Contraseña")
@@ -155,9 +158,7 @@ class LoginActivity : AppCompatActivity() {
             val email = etEmailDialog.text.toString().trim()
             sendPasswordResetEmail(email)
         }
-        builder.setNegativeButton("Cancelar") { dialog, _ ->
-            dialog.dismiss()
-        }
+        builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
 
@@ -170,10 +171,10 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Correo de restablecimiento enviado. Revisa tu bandeja de spam.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Correo enviado. Revisa spam.", Toast.LENGTH_LONG).show()
                 } else {
-                    Log.e("FORGOT_PASSWORD", "Error al enviar correo de restablecimiento", task.exception)
-                    Toast.makeText(this, "No se pudo enviar el correo. Verifica que el correo esté registrado.", Toast.LENGTH_LONG).show()
+                    Log.e("FORGOT_PASSWORD", "Error", task.exception)
+                    Toast.makeText(this, "No se pudo enviar el correo.", Toast.LENGTH_LONG).show()
                 }
             }
     }
@@ -195,12 +196,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun applySavedTheme() {
-        val savedTheme = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString(PREF_THEME, THEME_LIGHT) ?: THEME_LIGHT
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val savedTheme = prefs.getString(PREF_THEME, THEME_LIGHT) ?: THEME_LIGHT
         applyTheme(savedTheme)
     }
 
     private fun updateThemeIcon() {
-        val currentTheme = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString(PREF_THEME, THEME_LIGHT)
+        val currentTheme = sharedPreferences.getString(PREF_THEME, THEME_LIGHT)
         val iconRes = if (currentTheme == THEME_DARK) R.drawable.ic_day else R.drawable.ic_night
         btnThemeToggle.setImageResource(iconRes)
     }
@@ -210,14 +212,6 @@ class LoginActivity : AppCompatActivity() {
         editor.putString("saved_email", email)
         editor.putString("saved_password", password)
         editor.putBoolean("remember_user", true)
-        editor.apply()
-    }
-
-    private fun clearUserCredentials() {
-        val editor = sharedPreferences.edit()
-        editor.remove("saved_email")
-        editor.remove("saved_password")
-        editor.remove("remember_user")
         editor.apply()
     }
 
@@ -231,7 +225,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.error = "Formato de correo electrónico inválido"
+            etEmail.error = "Correo inválido"
             return false
         }
 
@@ -241,7 +235,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         if (password.length < 8) {
-            etPassword.error = "La contraseña debe tener al menos 8 caracteres"
+            etPassword.error = "Debe tener al menos 8 caracteres"
             return false
         }
 

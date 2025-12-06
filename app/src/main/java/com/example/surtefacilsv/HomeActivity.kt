@@ -31,6 +31,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        applySavedTheme()     // ← OBLIGATORIO ANTES DEL SUPER
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
 
@@ -38,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Catálogo"
 
-        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
 
         initViews()
         setupRecyclerView()
@@ -102,10 +105,9 @@ class HomeActivity : AppCompatActivity() {
         if (query.isNullOrBlank()) {
             displayedProducts.addAll(allProducts)
         } else {
-            val filtered = allProducts.filter {
-                it.name.contains(query, ignoreCase = true) 
-            }
-            displayedProducts.addAll(filtered)
+            displayedProducts.addAll(
+                allProducts.filter { it.name.contains(query, ignoreCase = true) }
+            )
         }
         productAdapter.updateList(displayedProducts)
     }
@@ -146,6 +148,12 @@ class HomeActivity : AppCompatActivity() {
         recreate()
     }
 
+    private fun applySavedTheme() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val savedTheme = prefs.getString("app_theme", "light") ?: "light"
+        applyTheme(savedTheme)
+    }
+
     private fun applyTheme(theme: String) {
         when (theme) {
             "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -164,9 +172,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun logout() {
         FirebaseAuth.getInstance().signOut()
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
+
+        sharedPreferences.edit().clear().apply()
 
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

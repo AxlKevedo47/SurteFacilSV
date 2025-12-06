@@ -29,8 +29,7 @@ class ConfirmOrderActivity : AppCompatActivity() {
     private lateinit var tvTotalOrderSummary: TextView
     private lateinit var etDeliveryAddress: EditText
     private lateinit var cbCashOnDelivery: CheckBox
-    private lateinit var tvBusinessName: TextView
-    private lateinit var tvBusinessAddress: TextView
+
     private lateinit var btnSendOrder: Button
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -55,8 +54,7 @@ class ConfirmOrderActivity : AppCompatActivity() {
         tvTotalOrderSummary = findViewById(R.id.tvTotalOrderSummary)
         etDeliveryAddress = findViewById(R.id.etDeliveryAddress)
         cbCashOnDelivery = findViewById(R.id.cbCashOnDelivery)
-        tvBusinessName = findViewById(R.id.tvBusinessName)
-        tvBusinessAddress = findViewById(R.id.tvBusinessAddress)
+
         btnSendOrder = findViewById(R.id.btnSendOrder)
     }
 
@@ -82,14 +80,13 @@ class ConfirmOrderActivity : AppCompatActivity() {
                     if (document != null && document.exists()) {
                         val businessName = document.getString("businessName") ?: (document.getString("name") ?: "Nombre no disponible")
                         val businessAddress = document.getString("address") ?: "Dirección no disponible"
-                        tvBusinessName.text = businessName
-                        tvBusinessAddress.text = businessAddress
+
                     } else {
-                        tvBusinessName.text = "Vendedor no encontrado"
+
                     }
                 }
                 .addOnFailureListener { 
-                    tvBusinessName.text = "Error al cargar datos"
+
                 }
         }
     }

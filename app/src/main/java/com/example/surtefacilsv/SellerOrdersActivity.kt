@@ -51,20 +51,14 @@ class SellerOrdersActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        rgOrderStatusFilter.setOnCheckedChangeListener { _, checkedId ->
+        rgOrderStatusFilter.setOnCheckedChangeListener { _, _ ->
             filterOrders()
         }
     }
 
     private fun loadOrdersFromFirestore() {
-        val sellerId = auth.currentUser?.uid
-        if (sellerId == null) {
-            Toast.makeText(this, "Error: Vendedor no autenticado.", Toast.LENGTH_LONG).show()
-            return
-        }
 
         firestore.collection("orders")
-            .whereEqualTo("sellerId", sellerId)
             .orderBy("orderDate", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
@@ -78,19 +72,30 @@ class SellerOrdersActivity : AppCompatActivity() {
                     val order = doc.toObject(Order::class.java)
                     allOrders.add(order)
                 }
+
                 filterOrders()
             }
     }
 
+
     private fun filterOrders() {
-        val selectedStatus = if (rgOrderStatusFilter.checkedRadioButtonId == R.id.rbPending) {
-            "Pendiente"
-        } else {
-            "Entregado"
+        val selectedStatus = when (rgOrderStatusFilter.checkedRadioButtonId) {
+            R.id.rbPending -> "pendiente"
+            R.id.rbDelivered -> "entregado"
+            else -> "pendiente"
         }
 
         displayedOrders.clear()
-        displayedOrders.addAll(allOrders.filter { it.status == selectedStatus })
+
+        displayedOrders.addAll(
+            allOrders.filter { order ->
+                order.status?.trim()?.lowercase() == selectedStatus
+            }
+        )
+
+        Log.d("ORDERS", "Pedidos filtrados: ${displayedOrders.size}")
+
         orderAdapter.updateList(displayedOrders)
     }
+
 }

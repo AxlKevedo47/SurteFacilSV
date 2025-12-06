@@ -3,7 +3,7 @@ package com.example.surtefacilsv.models
 import java.util.Date
 
 data class Order(
-    val id: String = "",
+    var id: String = "",
     val customerName: String = "",
     val orderDate: Date = Date(),
     val status: String = "Pendiente", // Can be "Pendiente" or "Entregado"
