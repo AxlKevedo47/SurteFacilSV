@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        applySavedTheme()     // ← OBLIGATORIO ANTES DEL SUPER
+        applySavedTheme()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)

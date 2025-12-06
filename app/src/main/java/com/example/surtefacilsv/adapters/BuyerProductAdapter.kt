@@ -43,7 +43,6 @@ class BuyerProductAdapter(
             tvProductName.text = product.name
             tvProductPrice.text = String.format("$%.2f", product.price)
 
-            // Only show the image if it's a valid web URL
             if (product.imageUrl.startsWith("http")) {
                 ivProductImage.visibility = View.VISIBLE
                 Glide.with(itemView.context)

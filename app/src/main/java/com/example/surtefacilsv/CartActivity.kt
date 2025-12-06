@@ -49,7 +49,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         cartAdapter = CartAdapter(
-            mutableListOf(), // Start with an empty list
+            mutableListOf(),
             onIncrease = { item ->
                 val success = CartManager.increaseQuantity(item)
                 if (!success) {
@@ -65,7 +65,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         CartManager.cartItems.observe(this) { cartItems ->
-            // The observer will update the adapter with the correct list
+
             cartAdapter.updateList(cartItems)
         }
 

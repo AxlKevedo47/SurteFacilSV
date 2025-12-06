@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Título principal -->
         <TextView
             style="@style/TextAppearance.Material3.HeadlineSmall"
             android:layout_width="wrap_content"
@@ -22,7 +21,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp" />
 
-        <!-- Sección resumen -->
+
         <TextView
             style="@style/TextAppearance.Material3.TitleLarge"
             android:layout_width="wrap_content"

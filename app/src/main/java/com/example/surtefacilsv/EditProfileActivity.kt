@@ -32,7 +32,6 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        // Configuracion del  Toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Editar Perfil"
 
@@ -71,7 +70,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Configura los listeners para mostrar/ocultar contraseñas y ejecutar el guardado de cambios al presionar el botón
+
         btnToggleNewPassword.setOnClickListener {
             isNewPasswordVisible = !isNewPasswordVisible
             togglePasswordVisibility(etNewPassword, btnToggleNewPassword, isNewPasswordVisible)
@@ -111,13 +110,12 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun validateInputs(fullName: String, email: String, newPassword: String, confirmPassword: String): Boolean {
-        // Limpiar errores Previos
+
         etFullName.error = null
         etEmail.error = null
         etNewPassword.error = null
         etConfirmPassword.error = null
 
-        // Validacion de Nombre
         if (fullName.isEmpty()) {
             etFullName.error = "El nombre completo es requerido"
             return false
@@ -126,7 +124,6 @@ class EditProfileActivity : AppCompatActivity() {
             return false
         }
 
-        // Valida que el Correo sea colocado
         if (email.isEmpty()) {
             etEmail.error = "El correo electrónico es requerido"
             return false
@@ -135,7 +132,6 @@ class EditProfileActivity : AppCompatActivity() {
             return false
         }
 
-        // Validar contraseñas si se están cambiando
         if (newPassword.isNotEmpty()) {
             if (newPassword.length < 8) {
                 etNewPassword.error = "La contraseña debe tener al menos 8 caracteres"
@@ -163,7 +159,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         try {
-            // Actualiza el  SQLite
+
             val success = if (newPassword.isNotEmpty()) {
                 databaseHelper.updateUser(oldEmail, fullName, email, newPassword)
             } else {
@@ -171,15 +167,13 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             if (success) {
-                // Actualizar en Firebase
+
                 updateUserInFirebase(oldEmail, fullName, email, newPassword)
 
-                // Actualizar SharedPreferences
                 updateSharedPreferences(email, fullName)
 
                 showStatus("Cambios guardados exitosamente", true)
 
-                // Regresar al perfil después de 2 segundos
                 Handler().postDelayed({
                     finish()
                 }, 2000)
@@ -202,7 +196,6 @@ class EditProfileActivity : AppCompatActivity() {
             userData["password"] = newPassword
         }
 
-        // Esto hace que Busca y actualiza el documento en Firestore
         firestore.collection("users")
             .whereEqualTo("email", oldEmail)
             .get()

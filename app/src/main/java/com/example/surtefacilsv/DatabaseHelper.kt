@@ -9,9 +9,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "SurteFacilSV.db"
-        private const val DATABASE_VERSION = 3 // Incrementar la versión de la base de datos
+        private const val DATABASE_VERSION = 3
 
-        // Tabla de lo Usuarios
+
         private const val TABLE_USERS = "users"
         private const val COLUMN_ID = "id"
         private const val COLUMN_FULL_NAME = "full_name"
@@ -57,7 +57,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
     }
 
-    // Con esto se esta Agregando los Usaurios
     fun addUser(
         fullName: String,
         email: String,
@@ -75,7 +74,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val values = ContentValues().apply {
             put(COLUMN_FULL_NAME, fullName)
             put(COLUMN_EMAIL, email)
-            put(COLUMN_PASSWORD, password) // En producción, esto debería estar encriptado
+            put(COLUMN_PASSWORD, password)
             put(COLUMN_USER_TYPE, userType)
             if (userType == "Soy un Vendedor") {
                 put(COLUMN_BUSINESS_NAME, businessName)
@@ -89,7 +88,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return result != -1L
     }
 
-    // Valida si el usuario existe o no
+
     fun checkUser(email: String, password: String): Boolean {
         val db = readableDatabase
         val query = "SELECT * FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ? AND $COLUMN_PASSWORD = ?"
@@ -123,7 +122,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }.also { cursor.close() }
     }
 
-    // Verificar si email ya existe o No
+
     fun isEmailExists(email: String): Boolean {
         val db = readableDatabase
         val query = "SELECT * FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
@@ -133,7 +132,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return exists
     }
 
-    // Obtener usuario por email
     fun getUserByEmail(email: String): String? {
         val db = readableDatabase
         val query = "SELECT $COLUMN_FULL_NAME FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ?"
@@ -146,7 +144,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }.also { cursor.close() }
     }
 
-    // En el DatabaseHelper.kt - Actualizan los datos de un usuario en la base local SQLite, con o sin cambiar la contraseña según el metodo usado
 
     fun updateUser(oldEmail: String, newFullName: String, newEmail: String, newPassword: String): Boolean {
         val db = writableDatabase

@@ -22,7 +22,7 @@ object CartManager {
                 existingItem.quantity++
                 true
             } else {
-                false // Stock limit reached
+                false
             }
         } else {
             if (product.stock > 0) {
@@ -37,7 +37,7 @@ object CartManager {
                 currentItems.add(newItem)
                 true
             } else {
-                false // Product out of stock
+                false
             }
         }
 

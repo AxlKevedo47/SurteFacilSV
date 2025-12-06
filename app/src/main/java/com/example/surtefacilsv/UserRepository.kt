@@ -47,19 +47,19 @@ class UserRepository(private val context: Context) {
                     firestore.collection("users").document(uid)
                         .set(userData)
                         .addOnSuccessListener {
-                            // **CRITICAL FIX**: Check if the local save was successful
+
                             val wasLocalSaveSuccessful = localDb.addUser(fullName, email, password, userType, businessName, dui, rubro, address)
                             
                             if (wasLocalSaveSuccessful) {
-                                // Only report overall success if BOTH cloud and local saves worked
+
                                 val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                                 sharedPreferences.edit().putString("user_uid", uid).apply()
                                 onResult(true, null)
                             } else {
-                                // The local save failed. This is the error that was being hidden.
+
                                 val errorMessage = "El usuario se creó en la nube, pero falló al guardar en el dispositivo."
                                 Log.e("UserRepository", errorMessage)
-                                // For a production app, you might want to delete the user from Auth/Firestore to clean up.
+
                                 onResult(false, errorMessage)
                             }
                         }

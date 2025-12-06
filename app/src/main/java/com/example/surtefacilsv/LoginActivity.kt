@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        applySavedTheme()  // SIEMPRE ANTES DEL super
+        applySavedTheme()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

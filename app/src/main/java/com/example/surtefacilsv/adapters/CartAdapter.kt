@@ -61,7 +61,6 @@ class CartAdapter(
             tvProductPrice.text = String.format("$%.2f", item.price)
             tvQuantity.text = item.quantity.toString()
 
-            // Cargar imagen desde Firestore usando el productId
             loadProductImage(item.productId)
 
             btnIncrease.setOnClickListener { onIncrease(item) }
