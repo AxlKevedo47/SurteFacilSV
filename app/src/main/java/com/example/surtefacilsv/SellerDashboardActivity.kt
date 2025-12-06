@@ -80,6 +80,7 @@ class SellerDashboardActivity : AppCompatActivity(), OnMapReadyCallback {
 
         btnReports.setOnClickListener {
             Toast.makeText(this, "Mostrando reportes...", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SellerOrdersActivity::class.java))
         }
 
         btnAddProductQuick.setOnClickListener {
